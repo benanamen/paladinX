@@ -1,0 +1,15 @@
+ChangeLog
+
+00024 Username and password reversed in user creation
+  action/admin/pages/users/users.create.process
+  lins 18 and 19
+  FATAL, for immediate fix and release
+
+00023 users.list.process.php changed to support #00022
+
+00022 users.content.php changed to users.list.content.php
+
+00021 Milestone comment bug fix
+
+
+

@@ -1,13 +1,7 @@
 <?php
 /*
 	admin.process.php
-	02 Dec 2020 14:27 GMT
-	Paladin X.4 (Squire 4)
-	Jason M. Knight, Paladin Systems North
-*/
-/*
-	admin.process.php
-	30 Nov 2020 04:00 GMT
+	02 Dec 2020 23:28 GMT
 	Paladin X.4 (Squire 4)
 	Jason M. Knight, Paladin Systems North
 */
