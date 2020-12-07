@@ -1,0 +1,193 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta
+	name="viewport"
+	content="width=device-width,height=device-height,initial-scale=1"
+>
+<link
+	rel="stylesheet"
+	href="changeLog.screen.css"
+	media="screen,projection,tv"
+>
+<title>RELEASE MILESTONE 07 Dec 2020 06:22 GMT</title>
+</head><body>
+
+	<h1>Paladin X Change Logs</h1>
+	
+	<main>
+			<table class="changeLog">
+				<caption>RELEASE MILESTONE 07 Dec 2020 06:22 GMT</caption>
+				<thead>
+					<tr>
+						<th scope="col">Status</th>
+						<th scope="col">ID Code</th>
+						<th scope="col">Description</th>
+					</tr>
+				</thead><tbody>
+					<tr>
+							<td rowspan="2">FIXED</td>
+							<td rowspan="2">00037</td>
+							<th scope="col">Non-optional after optional Database::prepExec</td>
+						</tr><tr>
+							<td>
+								Removed = [] from $data in declaration.
+							</td>
+						</tr><tr>
+							<td rowspan="2">FIXED</td>
+							<td rowspan="2">00036</td>
+							<th scope="col">non-optional after optional Load::loadExec</td>
+						</tr><tr>
+							<td>
+								This apparently now throws an error in some version of PHP. Odd when 8.0 and 7.4 don't... added ="" to libs/squire.php in declaration of Load::loadExec
+							</td>
+						</tr><tr>
+							<td rowspan="2">ADDED</td>
+							<td rowspan="2">00035</td>
+							<th scope="col">Methods "<code>Database::duplicates(PDOException $e)</code>" and "<code>Database::errorColumn</code>"</td>
+						</tr><tr>
+							<td>
+								Added to PDO extension in preparation of implementing #00028
+							</td>
+						</tr><tr>
+							<td rowspan="2" class="bug">BUG</td>
+							<td rowspan="2">00034</td>
+							<th scope="col">Case Insensitive URI</td>
+						</tr><tr>
+							<td>
+								Windows lack of case sensitive filesystem leads to case insensitive URI's.<br>
+								<br>
+								Functions <code>matchDir</code> and <code>matchFile</code> added to lib/squire.lib.php in preparation for implementing case sensitive file_exists by using glob() instead, which returns the actual case based filename match regardless of host filesystem.<br>
+								<br>
+								All the "file_exists" need to be replaced system-wide with one of these functions, holding off for next milestone major restructure to do this.
+							</td>
+						</tr><tr>
+							<td rowspan="2">FIXED</td>
+							<td rowspan="2">00033</td>
+							<th scope="col">Double Slashes in URI</td>
+						</tr><tr>
+							<td>
+								Set to reject http code 400<br>
+								/lib/squire.lib.php Request::set
+							</td>
+						</tr><tr>
+							<td rowspan="2">DONE</td>
+							<td rowspan="2">00032</td>
+							<th scope="col">Language Strings Missing</td>
+						</tr><tr>
+							<td>
+								Create lang strings for users.create and users.edit errors
+							</td>
+						</tr><tr>
+							<td rowspan="2">FIXED</td>
+							<td rowspan="2">00031</td>
+							<th scope="col">"notice" not in quotes in Settings::set</td>
+						</tr><tr>
+							<td>
+								/actions/admin/pages/users/users.create.process.php<br>
+								/actions/admin/pages/users/users.edit.process.php
+							</td>
+						</tr><tr>
+							<td rowspan="2">FIXED</td>
+							<td rowspan="2">00030</td>
+							<th scope="col">pageTitle assignment not working</td>
+						</tr><tr>
+							<td>
+								"==" instead of plain "=" on pageTitle assignment<br>
+								/actions/static/static.process.php line 20
+							</td>
+						</tr><tr>
+							<td rowspan="2">FIXED</td>
+							<td rowspan="2">00029</td>
+							<th scope="col">gz handler busted php 8.</td>
+						</tr><tr>
+							<td>
+								Underlying error in PHP regression causing problem. PHP 8 demands parameter count match when overloading system methods. Added dummy splat/spread to Database::query to resolve issue.<br>
+								<br>
+								Also refactored gz routine anyways.
+							</td>
+						</tr><tr>
+							<td rowspan="2" class="pending">PENDING</td>
+							<td rowspan="2">00028</td>
+							<th scope="col">Add duplicate usernames and e-mails detection.</td>
+						</tr><tr>
+							<td>
+								Implementation may require some rethinking of the structure and how Databsse handles things. I do beloeve I'll be adding a handler method to Database to parse the field of 1062's out of the errorInfo.<br>
+								<br>
+								I want "name' and "username" to be mutually unique, as well as the e-mails. With mails I think it's a bit easier as I can just add them to a separate table to check against. This has the advantage of tracking all mails ever used by a user.
+							</td>
+						</tr><tr>
+							<td rowspan="2">DONE</td>
+							<td rowspan="2">00027</td>
+							<th scope="col">UX issue with user edit/create/delete</td>
+						</tr><tr>
+							<td>
+								A .splash section showing the result was used, and in practice just felt like bad UX. Switched to show the userlist instead with the result in the system "notice" section.
+							</td>
+						</tr><tr>
+							<td rowspan="2">FIXED</td>
+							<td rowspan="2">00026</td>
+							<th scope="col">$_POST values should be trimmed</td>
+						</tr><tr>
+							<td>
+								Form rejection used instead of sanitization<br>
+								methods <code>trimSame</code> and <code>trimSamePost</code> added to libs/squire.lib.php
+							</td>
+						</tr><tr>
+							<td rowspan="2">FIXED, REVISIT</td>
+							<td rowspan="2">00025</td>
+							<th scope="col">Logout from Admin goes to /admin, resulting in 404.</td>
+						</tr><tr>
+							<td>
+								Redirected to "/"
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="changeLog">
+				<caption>RELEASE MILESTONE 02 Dec 2020 23:28 GMT</caption>
+				<thead>
+					<tr>
+						<th scope="col">Status</th>
+						<th scope="col">ID Code</th>
+						<th scope="col">Description</th>
+					</tr>
+				</thead><tbody>
+					<tr>
+							<td rowspan="2">FIXED</td>
+							<td rowspan="2">00024</td>
+							<th scope="col">Username and password reversed in user creation</td>
+						</tr><tr>
+							<td>
+								action/admin/pages/users/users.create.process<br>
+								lines 18 and 19
+							</td>
+						</tr><tr>
+							<td rowspan="2">CHANGE</td>
+							<td rowspan="2">00023</td>
+							<th scope="col">Support change for user.content.php</td>
+						</tr><tr>
+							<td>
+								users.list.process.php changed to support #00022
+							</td>
+						</tr><tr>
+							<td rowspan="2">CHANGE</td>
+							<td rowspan="2">00022</td>
+							<th scope="col">users.content.php changed to users.list.content.php</td>
+						</tr><tr>
+							<td>
+								More consistent naming scheme.
+							</td>
+						</tr><tr>
+							<td rowspan="2">FIXED</td>
+							<td rowspan="2">00021</td>
+							<th scope="col">Milestone comment bug</td>
+						</tr><tr>
+							<td>
+								Was creating duplicate in one file due to bug in regex.<br>
+								
+						</td>
+					</tr>
+				</tbody>
+			</table>
+	</main>
+	
+</body></html>

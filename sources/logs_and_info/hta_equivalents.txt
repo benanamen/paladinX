@@ -1,0 +1,58 @@
+To function paladin/squire requires a rewriterule for "friendly uri's" and the "one index to rule them all" approach to development.
+
+The following:
+
+*** Apache (original, tested) ***
+
+RewriteEngine On
+RewriteRule !(\.(gif|jpg|png|css|js|html|txt|ico|zip|rar|pdf|xml|mp3|mp4|mpg|flv|swf|mkv|ogg|avi|woff|woff2|svg|eot|ttf|json|webmanifest)$) index.php
+
+
+Should be added on Apache systems in your hosts file or via .htaccess 
+
+
+The following are rough equivalents for other server software. These are untested and would require someone more versed in these systems han I am to test and apply them.
+
+-----------------------------------------------
+
+*** Lighttpd (untested) ***
+
+# change server.document.root to match your actual install location
+server.document.root = "/var/web/domain/www"
+url.rewrite-once = {
+	"(\.(gif|jpg|png|css|js|html|txt|ico|zip|rar|pdf|xml|mp3|mp4|mpg|flv|swf|mkv|ogg|avi|woff|woff2|svg|eot|ttf|json|webmanifest)$)" = "/index.php"
+	
+}
+
+-----------------------------------------------
+
+*** ngnix (untested) ***
+
+location / {
+  rewrite !(\.(gif|jpg|png|css|js|html|txt|ico|zip|rar|pdf|xml|mp3|mp4|mpg|flv|swf|mkv|ogg|avi|woff|woff2|svg|eot|ttf|json|webmanifest)$) /index.php;
+}
+
+-----------------------------------------------
+
+*** Microsoft IIS (untested, likely needs more XML structure!) ***
+<rewrite>
+	<rules>
+		<rule name="Redirect non-whitelisted to index.php">
+			<match url="(\.(gif|jpg|png|css|js|html|txt|ico|zip|rar|pdf|xml|mp3|mp4|mpg|flv|swf|mkv|ogg|avi|woff|woff2|svg|eot|ttf|json|webmanifest)$)"  />
+			<action type="Rewrite" url="/index.php"  />
+		</rule>
+	</rules>
+</rewrite>
+
+-----------------------------------------------
+
+*** PHP (unwritten) ***
+
+PHP has its own server for testing purposes ONLY, that I think can do this using a front controller, but I've got no clue where to start.
+
+
+-----------------------------------------------
+
+If anyone has any ideas on how to take this further or is willing to step up and test it, please visit the general discussion area of our forums.
+
+https://forums.cutcodedown.com/index.php?board=28.0

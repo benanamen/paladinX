@@ -1,9 +1,11 @@
 <?php
 /*
 	users.create.process.php
-	02 Dec 2020 23:28 GMT
+	07 Dec 2020 07:13 GMT
 	Paladin X.4 (Squire 4)
 	Jason M. Knight, Paladin Systems North
+	
+	Last Modified: 1607145283
 */
 
 function adminUser_create_process($db, &$data) {
@@ -15,13 +17,13 @@ function adminUser_create_process($db, &$data) {
 		if (!Hash::matchPost('userEditForm')) Bomb::lang('invalidEditHash');
 		
 		if (
-			!empty($_POST['username']) &&
-			!empty($_POST['password']) &&
-			!empty($_POST['contact_email'])
+			trimSamePost('username') &&
+			trimSamePost('password') &&
+			trimSamePost('contact_email')
 		) { // create
 		
 			$db->prepExec([
-				$_POST['name'] ?? $_POST['username'],
+				trimSamePost('name') ?? $_POST['username'],
 				$_POST['username'],
 				hash(PASSWORD_ALGO, $_POST['password']),
 				$_POST['contact_email']
@@ -36,7 +38,15 @@ function adminUser_create_process($db, &$data) {
 				);
 			}
 			
-			$data['contentFilePath'] = 'actions/admin/pages/%s/%s.createSuccess';
+			Settings::set([
+				'title' => '@createUserSuccessTitle_adminUser',
+				'text' => '@createUserSuccessDesc_adminUser',
+				'data' => [ $_POST['username'] ]
+				
+			], 'notice');
+			
+			admin_userListLoad($db, $data);
+
 			return;
 			
 		} // create 
@@ -44,7 +54,7 @@ function adminUser_create_process($db, &$data) {
 		$Settings::set([
 			'title' => '@createUserErrorTitle_adminUser',
 			'text' => '@createUserErrorEmptyFields_adminUser'
-		], notice);
+		], 'notice');
 		
 	} // from form
 	

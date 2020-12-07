@@ -1,9 +1,11 @@
 <?php
 /*
 	common.template.php
-	02 Dec 2020 23:28 GMT
+	07 Dec 2020 07:13 GMT
 	Paladin X.4 (Squire 4)
 	Jason M. Knight, Paladin Systems North
+	
+	Last Modified: 1607292731
 */
 
 /*
@@ -12,6 +14,8 @@
 */
 
 function template_header($data = []) {
+
+	if ($data == null) $data = [];
 
 	if (!defined('TEMPLATE_EXTRAS')) define('TEMPLATE_EXTRAS', (
 		class_exists('Extras') &&
@@ -165,11 +169,20 @@ function template_header($data = []) {
 	if ($notice = Settings::get('notice')) {
 
 		$noticeDSS = template_section('#notice', Lang::get($notice['title']));
-
-		echo '
-			<p>
-				', Lang::get($notice['text']), '
-			</p>';
+		
+		if ($desc = Lang::get($notice['text'])) {
+		
+			if (!empty($notice['data'])) {
+				htmlSpecialCharsArray($notice['data']);
+				$desc = vsprintf($desc, $notice['data']);
+			}
+		
+			echo '
+				<p>
+					', $desc, '
+				</p>';
+				
+		}
 
 		if (!empty($notice['link'])) echo '
 			<a href="', $notice['link'], '">', Lang::get($notice['linkText']), '</a>';

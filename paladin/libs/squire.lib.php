@@ -1,9 +1,11 @@
 <?php
 /*
 	squire.lib.php
-	02 Dec 2020 23:28 GMT
+	07 Dec 2020 07:13 GMT
 	Paladin X.4 (Squire 4)
 	Jason M. Knight, Paladin Systems North
+	
+	Last Modified: 1607318969
 */
 
 /*
@@ -20,21 +22,21 @@
 
 /* *** START SYSTEM SETUP *** */
 
-foreach (['gzip', 'x-gzip', 'x-compress'] as $type) {
-	if (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], $type) !== false) {
-		define('OB_HANDLER', 'ob_gzhandler');
-		break;
+if (
+	!ini_get('zlib.output_compression') &&
+	function_exists('gzcompress')
+) {
+	foreach (['gzip', 'x-gzip', 'x-compress'] as $type) {
+		if (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], $type) !== false) {
+			ob_start('ob_gzhandler');
+			header('Content-Encoding: ' . $type);
+			break;
+		}
 	}
-}
-if (!defined('OB_HANDLER')) define('OB_HANDLER', null);
-ob_start(OB_HANDLER);
+	ob_start();
+} else ob_start();
+
 ob_implicit_flush(0);
-if (OB_HANDLER) header('Content-Encoding: ' . $type);
-register_shutdown_function(
-	function() {
-		ob_end_flush();
-	}
-);
 
 session_start();
 session_regenerate_id();
@@ -62,6 +64,13 @@ function action($db) {
 	Bomb::ifStarted('action');
 
 	$action = Request::value();
+	if (
+		$action === 'admin' &&
+		!empty($_REQUEST['logout'])
+	) {
+		header('Location: ' . substr($_SERVER['PHP_SELF'], 0, -10));
+		die('Redirecting from Admin');
+	}
 	if (!$action) $action = 'static';
 	if (!is_dir('actions/' . $action)) Bomb::http(404);
 	define('ACTION', $action);
@@ -71,6 +80,8 @@ function action($db) {
 	Load::isolate($actionPath . '.process.php');
 	process_action($db, $data);
 	if (class_exists('Extras')) Extras::process($db, $data);
+	
+	if (!Settings::get('holdPDO')) $db = null; /* release connection */
 	
 	template_header($data);
 	if (!empty($data['contentFilePath'])) Load::content(
@@ -91,9 +102,37 @@ function cleanPath($path) {
 	return trim(str_replace(['\\', '%5C'], '/', $path), '/');
 } // cleanPath
 
+function htmlSpecialCharsArray(&$arr) {
+	foreach ($arr as &$value) $value = htmlspecialchars($value);
+} // htmlSpecialCharsArray
+
+function matchDir($dirName) {
+	return (
+		!empty($match = glob($dirName, GLOB_ONLYDIR)) &&
+		($match !== false)
+	);
+} // matchDir
+
+function matchFile($fileName) {
+	return (
+		!empty($match = glob($fileName)) &&
+		($match !== false) &&
+		is_file($fileName)
+	);
+} // matchFile
+
 function safeName($name) {
 	return $name === preg_replace('/[^a-z0-9_]/', '', $name);
 } // safeName
+
+function trimSame($text) {
+	$result = trim($text);
+	return $result === $text ? $result : false;
+} // trimSame
+
+function trimSamePost($key) {
+	return array_key_exists($key, $_POST) ? trimSame($_POST[$key]) : false;
+} // trimSamePost
 
 function uriLocalize($uri) {
 	if (
@@ -102,7 +141,7 @@ function uriLocalize($uri) {
 	) return $uri;
 	return ROOT_HTTP . $uri;
 } // uriLocalize
-
+ 
 /*
 	*** END GLOBAL FUNCTIONS ***
 
@@ -239,7 +278,7 @@ final class Load {
 		include($name);
 	} // Load::isolate
 	
-	private static function loadExec($filePath, $name, &$data, $handler = '', $type) {
+	private static function loadExec($filePath, $name, &$data, $handler = '', $type = 'content') {
 		$filePath = sprintf($filePath, $name, $name);
 		if (file_exists($fn = $filePath . '.' . $type . '.php')) {
 			include_once($fn);
@@ -310,6 +349,7 @@ final class Request {
 
 	private static function set() {
 		self::$path = parse_url(cleanPath($_SERVER['REQUEST_URI']), PHP_URL_PATH);
+		if (strpos(self::$path, '//')) Bomb::http(400);
 		if (strpos(self::$path, '..')) Bomb::lang('invalidURI');
 		self::$path = substr(self::$path, strlen(ROOT_HTTP) - 1);
 		self::$data = (
@@ -490,7 +530,7 @@ final class Template {
 } // Template
 
 
-/* REMOVE FROM HERE DOWN ON DEPLOYMENT */
+/* REMOVE FROM HERE DOWN ON RELEASE CANDIDATE */
 function debugDump(...$var) {
 	foreach ($var as $v) {
 		echo '<pre>', var_dump($v), '</pre>';

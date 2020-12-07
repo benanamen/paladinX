@@ -1,9 +1,11 @@
 <?php
 /*
 	mysql.database.php
-	02 Dec 2020 23:28 GMT
+	07 Dec 2020 07:13 GMT
 	Paladin X.4 (Squire 4)
 	Jason M. Knight, Paladin Systems North
+	
+	Last Modified: 1607319172
 */
 
 final class Database extends PDO {
@@ -29,7 +31,7 @@ final class Database extends PDO {
 			try {
 				parent::__construct($dsn, $username, $password, $options);
 			} catch (PDOException $e) {
-				Bomb::lang('Database Connection Error', $e );
+				Bomb::lang('dbConnectionError', [ $e->getMessage() ] );
 			}
 			
 			define('DB_TABLE_PREFIX', $tablePrefix ? $tablePrefix . '_' : '');
@@ -45,7 +47,12 @@ final class Database extends PDO {
 			return $this->dryStatement('prepare', $name, $module, $tableName);
 		} // Database::prepare
 		
-		public function query($name, $module = 'common', $tableName = false) {
+		public function query(
+			$name,
+			$module = 'common',
+			$tableName = false,
+			...$compatibilityGarbage
+		) {
 			return $this->dryStatement('query', $name, $module, $tableName);
 		} // Database::query
 		
@@ -53,11 +60,24 @@ final class Database extends PDO {
 	
 	// START PUBLIC EXTENSIONS
 	
-		public function prepExec($data = [], $name, $module = 'common', $tableName = false) {
+		public function prepExec($data, $name, $module = 'common', $tableName = false) {
 			$stmt = $this->prepare($name, $module, $tableName);
 			$stmt->execute($data);
 			return $stmt;
 		} // Database::prepExec
+		
+		public function duplicates($e) {
+			if ($e->getCode() == 1062) return self::errorColumn();
+			return false;
+		} // Database::duplicates
+		
+		public function errorColumn() {
+			if ($info = self::errorInfo()) {
+				preg_match("/key '(.*)'$/", $info[2], $matches);
+				if (count($matches) > 0) return $matches[1];
+			}
+			return false;
+		} // Database::errorColumn
 		
 		public function rowCount($tableName) {
 			$stmt = $this->query('rowCount', 'common', $tableName);

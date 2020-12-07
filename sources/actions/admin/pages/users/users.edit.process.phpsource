@@ -1,9 +1,11 @@
 <?php
 /*
 	users.edit.process.php
-	02 Dec 2020 23:28 GMT
+	07 Dec 2020 07:13 GMT
 	Paladin X.4 (Squire 4)
 	Jason M. Knight, Paladin Systems North
+	
+	Last Modified: 1607292541
 */
 
 function adminUser_edit_process($db, &$data) {
@@ -20,13 +22,12 @@ function adminUser_edit_process($db, &$data) {
 		if (!Hash::matchPost('userEditForm')) Bomb::lang('invalidEditHash');
 
 		if (
-			!empty($_POST['id']) &&
-			!empty($_POST['username']) &&
-			!empty($_POST['contact_email'])
+			trimSamePost('id') &&
+			trimSamePost('username') &&
+			trimSamePost('contact_email')
 		) {
-
 			$db->prepExec([
-				$_POST['name'] ?? $_POST['username'],
+				trimSamePost('name') ?: $_POST['username'],
 				$_POST['username'],
 				$_POST['contact_email'],
 				$_POST['id']
@@ -42,7 +43,14 @@ function adminUser_edit_process($db, &$data) {
 				);
 			}
 			
-			$data['contentFilePath'] = 'actions/admin/pages/%s/%s.editSuccess';
+			Settings::set([
+				'title' => '@editUserSuccessTitle_adminUser',
+				'text' => '@editUserSuccessDesc_adminUser',
+				'data' => [ $_POST['username'] ]
+			], 'notice');
+			
+			admin_userListLoad($db, $data);
+			
 			return;
 			
 		}
@@ -50,7 +58,7 @@ function adminUser_edit_process($db, &$data) {
 		Settings::set([
 			'title' => '@editUserErrorTitle_adminUser',
 			'text' => '@editUserErrorEmptyFields_adminUser'
-		], notice);
+		], 'notice');
 		
 	}
 	

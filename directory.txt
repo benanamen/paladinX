@@ -1,10 +1,9 @@
-Paladin X Milestone - 02 Dec 2020 23:28 GMT
+Paladin X Milestone - 07 Dec 2020 07:13 GMT
 
 /
-  chengeLog.txt                                                       335 B 
   default.ini.php                                                     699 B 
   favicon.ico                                                        1406 B 
-  index.php                                                           298 B 
+  index.php                                                           302 B 
   robots.txt                                                           26 B 
   user.ini.php                                                        440 B 
   /actions
@@ -16,17 +15,17 @@ Paladin X Milestone - 02 Dec 2020 23:28 GMT
           internal_setPermissions.php                                 329 B 
           users.controls.ini.php                                       24 B 
           users.create.content.php                                    325 B 
-          users.create.process.php                                   1222 B 
+          users.create.process.php                                   1379 B 
           users.createSuccess.content.php                             284 B 
-          users.delete.process.php                                    646 B 
+          users.delete.process.php                                    871 B 
           users.deleteFailed.content.php                              276 B 
           users.deleteSuccess.content.php                             278 B 
           users.edit.content.php                                      266 B 
-          users.edit.process.php                                     1734 B 
+          users.edit.process.php                                     1884 B 
           users.editSuccess.content.php                               279 B 
           users.list.content.php                                      200 B 
           users.list.process.php                                      341 B 
-          users.process.php                                           462 B 
+          users.process.php                                           723 B 
     /actions/contact
       contact.process.php                                             437 B 
       contact.success.content.php                                     301 B 
@@ -35,17 +34,21 @@ Paladin X Milestone - 02 Dec 2020 23:28 GMT
       setup.install.php                                              1201 B 
       setup.process.php                                               418 B 
     /actions/static
-      static.process.php                                              691 B 
+      static.process.php                                              697 B 
       /actions/static/pages
         /actions/static/pages/default
           default.ini.php                                             395 B 
           default.static                                              831 B 
   /database
     /database/mysql
-      mysql.database.php                                             4596 B 
+      mysql.database.php                                             5028 B 
       /database/mysql/queries
         /database/mysql/queries/admin
           admin.auth.ini.php                                           32 B 
+          admin.users_checkDuplicateDisplayName.sql                    69 B 
+          admin.users_checkDuplicateDisplayUsername.sql                77 B 
+          admin.users_checkDuplicateEmail.sql                          86 B 
+          admin.users_checkDuplicates.sql                               0 B 
           admin.users_create.sql                                       97 B 
           admin.users_delete.sql                                       39 B 
           admin.users_edit.sql                                         89 B 
@@ -54,13 +57,14 @@ Paladin X Milestone - 02 Dec 2020 23:28 GMT
           admin.users_getPermissions.sql                               70 B 
           admin.users_getUsers.sql                                     72 B 
           admin.users_setPermissions.sql                               88 B 
+          admin.users_storeEmail.sql                                   61 B 
         /database/mysql/queries/common
           common.queries.ini.php                                      119 B 
         /database/mysql/queries/setup
           setup.auth.ini.php                                           32 B 
           setup.queries.ini.php                                       229 B 
           setup.user_permissions_table.sql                            144 B 
-          setup.users_table.sql                                       381 B 
+          setup.users_table.sql                                       428 B 
         /database/mysql/queries/user
           user.,get.sql                                                51 B 
           user.hasPermission.sql                                       80 B 
@@ -88,14 +92,18 @@ Paladin X Milestone - 02 Dec 2020 23:28 GMT
         admin.ini.php                                                 132 B 
       /lang/en/adminUser
         adminUser.ini.php                                             147 B 
-        createSuccessDesc.txt                                          51 B 
-        createSuccessTitle.txt                                         24 B 
-        deleteFailedDesc.txt                                           40 B 
-        deleteFailedTitle.txt                                          24 B 
-        deleteSuccessDesc.txt                                          24 B 
-        deleteSuccessTitle.txt                                         24 B 
-        editSuccessDesc.txt                                            27 B 
-        editSuccessTitle.txt                                           20 B 
+        createUserErrorEmptyFields.txt                                141 B 
+        createUserErrorTitle.txt                                       19 B 
+        createUserSuccessDesc.txt                                      51 B 
+        createUserSuccessTitle.txt                                     24 B 
+        deleteUserFailedDesc.txt                                       40 B 
+        deleteUserFailedTitle.txt                                      24 B 
+        deleteUserSuccessDesc.txt                                      24 B 
+        deleteUserSuccessTitle.txt                                     24 B 
+        editUserErrorEmptyFields.txt                                  141 B 
+        editUserErrorTitle.txt                                         15 B 
+        editUserSuccessDesc.txt                                        27 B 
+        editUserSuccessTitle.txt                                       20 B 
       /lang/en/contact
         messageSent.txt                                                12 B 
       /lang/en/contactUsModal
@@ -109,6 +117,8 @@ Paladin X Milestone - 02 Dec 2020 23:28 GMT
         adminUsersInvalidActionTitle.txt                               20 B 
         alreadyStartedDesc.txt                                         79 B 
         alreadyStartedTitle.txt                                        31 B 
+        dbConnectionErrorDesc.txt                                       2 B 
+        dbConnectionErrorTitle.txt                                     25 B 
         dbExecErrorDesc.txt                                            39 B 
         dbExecErrorTitle.txt                                           20 B 
         dbPrepareErrorDesc.txt                                         39 B 
@@ -180,8 +190,10 @@ Paladin X Milestone - 02 Dec 2020 23:28 GMT
   /libs
     extras.lib.php                                                   1658 B 
     main.lib.php                                                     1017 B 
-    squire.lib.php                                                  12.64 KB
+    squire.lib.php                                                  13.55 KB
     user.lib.php                                                     2938 B 
+  /logs_and_info
+    hta_equivalents.txt                                              2136 B 
   /modals
     contact.modalForm.php                                             706 B 
     login.modalForm.php                                               447 B 
@@ -195,7 +207,7 @@ Paladin X Milestone - 02 Dec 2020 23:28 GMT
         admin.template.php                                           1225 B 
         admin_user_edit.template.php                                 2959 B 
         admin_users.template.php                                     1861 B 
-        common.template.php                                          6846 B 
+        common.template.php                                          7063 B 
         extras.template.php                                           430 B 
         forms.template.php                                           1568 B 
         modal.template.php                                           1378 B 
@@ -204,4 +216,4 @@ Paladin X Milestone - 02 Dec 2020 23:28 GMT
         default.template.min.js                                      2488 B 
 
 
-158 files totaling 101.33 KB in 44 directories.
+169 files totaling 106.09 KB in 45 directories.

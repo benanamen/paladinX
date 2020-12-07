@@ -3,9 +3,10 @@
 		name VARCHAR(127) UNIQUE,
 		username VARCHAR(63) UNIQUE,
 		password VARCHAR(255),
-		register_email VARCHAR(320),
-		contact_email VARCHAR(320),
+		register_email VARCHAR(320) UNIQUE,
+		contact_email VARCHAR(320) UNIQUE,
 		created DATETIME DEFAULT CURRENT_TIMESTAMP,
 		last_access DATETIME DEFAULT CURRENT_TIMESTAMP,
+		banned BOOLEAN DEFAULT FALSE,
 		INDEX (name, username, last_access)
 	)

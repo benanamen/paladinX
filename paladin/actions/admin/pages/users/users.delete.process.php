@@ -1,9 +1,11 @@
 <?php
 /*
 	users.delete.process.php
-	02 Dec 2020 23:28 GMT
+	07 Dec 2020 07:13 GMT
 	Paladin X.4 (Squire 4)
 	Jason M. Knight, Paladin Systems North
+	
+	Last Modified: 1607141371
 */
 
 function adminUser_delete_process($db, &$data) {
@@ -20,10 +22,19 @@ function adminUser_delete_process($db, &$data) {
 	$stmt = $db->prepExec([ $_POST['id'] ], 'users_delete', 'admin');
 	
 	if ($stmt->rowCount() === 0) {
-		$data['contentFilePath'] = 'actions/admin/pages/%s/%s.deleteFailed';
+		Settings::set([
+			'title' => '@deleteUserFailedTitle_adminUser',
+			'text' => '@deleteUserFailedDesc_adminUser',
+			'data' => [ $_POST['id'] ]
+		], 'notice');
 	} else {
 		$db->prepExec([ $_POST['id'] ], 'users_flushPermissions', 'admin');
-		$data['contentFilePath'] = 'actions/admin/pages/%s/%s.deleteSuccess';
+		Settings::set([
+			'title' => '@deleteUserSuccessTitle_adminUser',
+			'text' => '@deleteUserSuccessDesc_adminUser',
+			'data' => [ $_POST['id'] ]
+		], 'notice');
 	}
+	admin_userListLoad($db, $data);
 		
 } // adminUser_delete_process

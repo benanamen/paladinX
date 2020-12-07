@@ -1,9 +1,11 @@
 <?php
 /*
 	static.process.php
-	02 Dec 2020 23:28 GMT
+	07 Dec 2020 07:13 GMT
 	Paladin X.4 (Squire 4)
 	Jason M. Knight, Paladin Systems North
+	
+	Last Modified: 1607077128
 */
 
 function process_action($db, &$data) {
@@ -23,15 +25,17 @@ function process_action($db, &$data) {
 	
 	if (Settings::loadFromIni($filePath)) $dataSources++;
 	
-	$data['pageTitle'] == Settings::get('pageTitle');
+	$data['pageTitle'] = Settings::get('pageTitle');
 	
-	if (file_exists($fn = $filePath . '.process.php')) {
+ 	if (file_exists($fn = $filePath . '.process.php')) {
 		$dataSources++;
 		Load::isolate($fn);
 		process_static($db, $data);
 	}
 	
+	
 	if (!$dataSources) Bomb::http(404);
+	
 	
 	return $data;
 	
